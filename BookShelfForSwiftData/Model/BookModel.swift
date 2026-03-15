@@ -47,7 +47,7 @@ enum ReadingStatus: String, Identifiable, Codable {
     }
 }
 
-enum Rating: Int, Identifiable, Codable {
+enum Rating: Int, Identifiable, Codable, CaseIterable {
     case zero = 0, one, two, three, four, five
     
     var id: Int {
