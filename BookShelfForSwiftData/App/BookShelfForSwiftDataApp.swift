@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct BookShelfForSwiftDataApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            BookMainView()
+                .modelContainer(BookModel.previewMockData)
         }
     }
 }
