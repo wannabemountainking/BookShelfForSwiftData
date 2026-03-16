@@ -26,7 +26,7 @@ struct AddAndUpdateView: View {
     
     // MARK: - Properties
     var book: BookModel?
-    var isNewBook: Bool { book == nil as BookModel? }
+    var isNewBook: Bool { self.book == nil }
     
     // MARK: - Body
     var body: some View {
@@ -66,11 +66,17 @@ struct AddAndUpdateView: View {
                 
                 Section("⭐️ 별점") {
                     HStack(spacing: 2) {
-                        ForEach(1..<6) { numberOfStars in
-                            Button(numberOfStars > rating.rawValue ? "☆" : "★") {
-                                rating = Rating.allCases[numberOfStars]
+                        ForEach(Array(Rating.allCases.dropFirst())) { ratingStar in
+                            Button {
+                                //action
+                                self.rating = ratingStar
+                            } label: {
+                                Text(self.rating.rawValue < ratingStar.rawValue ? "☆" : "★")
+                                    .font(.title2.bold())
+                                    .foregroundStyle(.yellow)
                             }
-                            .disabled(numberOfStars > rating.rawValue)
+                            .padding(.horizontal, 3)
+                            .buttonStyle(.plain)
                         }
                     }
                 }
@@ -107,12 +113,12 @@ struct AddAndUpdateView: View {
                                 )
                                 modelContext.insert(newBook)
                             } else {
-                                book?.title = title
-                                book?.author = author
-                                book?.status = readingStatus
-                                book?.rating = rating
-                                book?.startDate = startDate
-                                book?.memo = memo
+                                book?.title = self.title
+                                book?.author = self.author
+                                book?.status = self.readingStatus
+                                book?.rating = self.rating
+                                book?.startDate = hasStartDate ? self.startDate : nil
+                                book?.memo = self.memo
                             }
                             dismiss()
                         } label: {
@@ -143,16 +149,17 @@ struct AddAndUpdateView: View {
                 }
                 
             } //:LIST
-            .navigationTitle(isNewBook ? "독서 정보 추가" : "독서 정보 수정")
+            .navigationTitle(book == nil ? "독서 정보 추가" : "독서 정보 수정")
             .navigationBarTitleDisplayMode(.inline)
             .task {
-                if isNewBook {
-                    title = book?.title ?? ""
-                    author = book?.author ?? ""
-                    readingStatus = book?.status ?? .reading
-                    rating = book?.rating ?? .zero
-                    startDate = book?.startDate ?? .now
-                    memo = book?.memo ?? ""
+                if !isNewBook {
+                    self.title = book?.title ?? ""
+                    self.author = book?.author ?? ""
+                    self.readingStatus = book?.status ?? .reading
+                    self.rating = book?.rating ?? .zero
+                    self.startDate = book?.startDate ?? Date()
+                    self.hasStartDate = book?.startDate != nil
+                    self.memo = book?.memo ?? ""
                 }
             }
         } //:NAVIGATION
@@ -161,7 +168,7 @@ struct AddAndUpdateView: View {
 
 #Preview("book 있음") {
     
-    let _ = BookModel.previewMockData
+    let _ = BookModel.previewContainer
     let theBook = BookModel(title: "Clean Architecture", author: "로버트 마틴", status: .reading, rating: .two, startDate: BookModel.dateFormatter().date(from: "26년 01년 22일"))
     return AddAndUpdateView(book: theBook)
 }
@@ -170,5 +177,5 @@ struct AddAndUpdateView: View {
     NavigationStack {
         AddAndUpdateView()
     }
-    .modelContainer(BookModel.previewMockData)
+    .modelContainer(BookModel.previewContainer)
 }

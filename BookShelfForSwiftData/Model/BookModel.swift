@@ -97,8 +97,10 @@ final class BookModel {
 
 @MainActor
 extension BookModel {
+//    
+//    static let container: ModelContainer = try! ModelContainer(for: BookModel.self, configurations: ModelConfiguration(isStoredInMemoryOnly: false))
     
-    static var previewMockData: ModelContainer {
+    static var previewContainer: ModelContainer {
         let container: ModelContainer
         
         do {

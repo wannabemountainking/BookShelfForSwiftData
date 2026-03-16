@@ -56,7 +56,7 @@ struct BookMainView: View {
                         ForEach(filteredBooks) { book in
                             NavigationLink {
                                 // destinationView
-                                AddAndUpdateView()
+                                AddAndUpdateView(book: book)
                             } label: {
                                 BookRowView(book: book)
                                     .swipeActions(edge: .trailing, allowsFullSwipe: true) {
@@ -134,7 +134,7 @@ struct BookMainView: View {
 
 #Preview("독서 목록 있음") {
     BookMainView()
-        .modelContainer(BookModel.previewMockData)
+        .modelContainer(BookModel.previewContainer)
 }
 
 #Preview("독서 목록 없음") {

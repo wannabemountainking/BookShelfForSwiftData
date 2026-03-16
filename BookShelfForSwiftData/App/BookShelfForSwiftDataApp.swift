@@ -10,10 +10,11 @@ import SwiftData
 
 @main
 struct BookShelfForSwiftDataApp: App {
+    
     var body: some Scene {
         WindowGroup {
             BookMainView()
-                .modelContainer(BookModel.previewMockData)
+                .modelContainer(for: BookModel.self)
         }
     }
 }
